@@ -364,12 +364,6 @@ if (!class_exists('socialnet_notify'))
 				return;
 			}
 
-			$sql = "UPDATE " . SN_NOTIFY_TABLE . "
-					SET ntf_read = " . SN_NTF_STATUS_READ . "
-					WHERE ntf_id = {$ntf_mark}
-						AND ntf_user = {$user->data['user_id']}";
-			$db->sql_query($sql);
-
 			// Mark readed all other notifications to same status, etc.
 			$ntf_like = str_replace('&', '&amp;', preg_replace('/ntfMark=[0-9]+&/','', $_SERVER['QUERY_STRING']));
 			$sql = "UPDATE " . SN_NOTIFY_TABLE . "
