@@ -125,6 +125,7 @@ if (!class_exists('socialnet_notify'))
 			if ($ntf_type == 'markRead' && $ntf_id != 0)
 			{
 				$this->ntf_markID(SN_NTF_STATUS_READ, SN_NTF_STATUS_READ, $ntf_id);
+				die(json_encode(array('success'=>true)));
 			}
 
 			if ($ntf_type == 'check')
