@@ -366,7 +366,15 @@ if (!class_exists('socialnet_notify'))
 			}
 
 			// Mark readed all other notifications to same status, etc.
-			$ntf_like = str_replace('&', '&amp;', preg_replace('/ntfMark=[0-9]+&/','', $_SERVER['QUERY_STRING']));
+			unset($_GET['ntfMark']);
+			$params = array();
+			
+			foreach( $_GET as $id => $val)
+			{
+				$params[] =  $id . '=' . request_var($id, '');
+			}
+			
+			$ntf_like = $db->sql_escape(implode( '&amp;', $params));
 			$sql = "UPDATE " . SN_NOTIFY_TABLE . "
 					SET ntf_read = " . SN_NTF_STATUS_READ . "
 					WHERE ntf_user = {$user->data['user_id']}
