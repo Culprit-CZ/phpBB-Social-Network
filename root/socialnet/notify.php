@@ -365,20 +365,14 @@ if (!class_exists('socialnet_notify'))
 				return;
 			}
 
-			// Mark readed all other notifications to same status, etc.
-			unset($_GET['ntfMark']);
-			$params = array();
+			$sql = "SELECT ntf_data FROM " . SN_NOTIFY_TABLE . " WHERE ntf_id = '{$ntf_mark}'";
+			$rs = $db->sql_query( $sql);
+			$data = unserialize($db->sql_fetchfield('ntf_data', $rs));
 			
-			foreach( $_GET as $id => $val)
-			{
-				$params[] =  $id . '=' . request_var($id, '');
-			}
-			
-			$ntf_like = $db->sql_escape(implode( '&amp;', $params));
 			$sql = "UPDATE " . SN_NOTIFY_TABLE . "
 					SET ntf_read = " . SN_NTF_STATUS_READ . "
 					WHERE ntf_user = {$user->data['user_id']}
-						AND ntf_data LIKE '%{$ntf_like}%'";
+						AND ntf_data LIKE '%{$data['link']}%'";
 			$db->sql_query($sql);
 		}
 
