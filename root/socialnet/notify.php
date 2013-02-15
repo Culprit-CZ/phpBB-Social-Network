@@ -125,6 +125,7 @@ if (!class_exists('socialnet_notify'))
 			if ($ntf_type == 'markRead' && $ntf_id != 0)
 			{
 				$this->ntf_markID(SN_NTF_STATUS_READ, SN_NTF_STATUS_READ, $ntf_id);
+				die(json_encode(array('success'=>true)));
 			}
 
 			if ($ntf_type == 'check')
@@ -364,10 +365,19 @@ if (!class_exists('socialnet_notify'))
 				return;
 			}
 
+			$sql = "SELECT ntf_data FROM " . SN_NOTIFY_TABLE . " WHERE ntf_id = '{$ntf_mark}'";
+			$rs = $db->sql_query( $sql);
+			$data = unserialize($db->sql_fetchfield('ntf_data', $rs));
+			
+			if (!isset($data['link']) || empty($data['link']))
+			{
+				return;
+			}
+
 			$sql = "UPDATE " . SN_NOTIFY_TABLE . "
-								SET ntf_read = " . SN_NTF_STATUS_READ . "
-									WHERE ntf_id = {$ntf_mark}
-										AND ntf_user = {$user->data['user_id']}";
+					SET ntf_read = " . SN_NTF_STATUS_READ . "
+					WHERE ntf_user = {$user->data['user_id']}
+						AND ntf_data LIKE '%{$data['link']}%'";
 			$db->sql_query($sql);
 		}
 
