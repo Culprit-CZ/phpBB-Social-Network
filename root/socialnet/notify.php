@@ -369,6 +369,11 @@ if (!class_exists('socialnet_notify'))
 			$rs = $db->sql_query( $sql);
 			$data = unserialize($db->sql_fetchfield('ntf_data', $rs));
 			
+			if (!isset($data['link']) || empty($data['link']))
+			{
+				return;
+			}
+
 			$sql = "UPDATE " . SN_NOTIFY_TABLE . "
 					SET ntf_read = " . SN_NTF_STATUS_READ . "
 					WHERE ntf_user = {$user->data['user_id']}
